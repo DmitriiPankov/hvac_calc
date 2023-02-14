@@ -23,21 +23,52 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.white,
         primaryColor: const Color.fromARGB(255, 242, 242, 242),
-        textTheme: const TextTheme(
+        textTheme: TextTheme(
             headlineMedium: TextStyle(
-          fontFamily: 'RobotoMono',
-          fontSize: 16,
-          color: Color.fromARGB(255, 59, 54, 84),
-        )),
-        appBarTheme: const AppBarTheme(
-          iconTheme: IconThemeData(color: Colors.black),
-          foregroundColor: Colors.black,
+              fontFamily: 'RobotoMono',
+              fontSize: 16,
+              color: AppTheme.colors.font1,
+            ),
+            headlineLarge: TextStyle(
+              shadows: [
+                Shadow(
+                    color: AppTheme.colors.font1, offset: const Offset(0, -2))
+              ],
+              fontFamily: 'RobotoMono',
+              fontSize: 16,
+              color: const Color.fromARGB(0, 3, 35, 76),
+              decoration: TextDecoration.underline,
+              decorationThickness: 1.0,
+              decorationColor: AppTheme.colors.font1,
+              decorationStyle: TextDecorationStyle.dotted,
+            ),
+            headlineSmall: TextStyle(
+              shadows: [
+                Shadow(
+                    color: AppTheme.colors.font1, offset: const Offset(0, -2))
+              ],
+              fontFamily: 'RobotoMono',
+              fontSize: 15,
+              color: const Color.fromARGB(0, 3, 35, 76),
+              decoration: TextDecoration.underline,
+              decorationThickness: 1.0,
+              decorationColor: AppTheme.colors.font1,
+              decorationStyle: TextDecorationStyle.dotted,
+            ),
+            displaySmall: TextStyle(
+              fontFamily: 'RobotoMono',
+              fontSize: 15,
+              color: AppTheme.colors.font1,
+            )),
+        appBarTheme: AppBarTheme(
+          iconTheme: IconThemeData(color: AppTheme.colors.font1),
+          foregroundColor: AppTheme.colors.font1,
           titleTextStyle: TextStyle(
-            color: Color.fromARGB(255, 59, 54, 84),
+            color: AppTheme.colors.font1,
             fontSize: 18,
             fontFamily: 'RobotoMono',
           ),
-          backgroundColor: Color.fromARGB(0, 255, 255, 255),
+          backgroundColor: const Color.fromARGB(0, 255, 255, 255),
           elevation: 0,
         ),
       ),

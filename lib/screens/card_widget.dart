@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:hvac_calc/main.dart';
 import 'package:hvac_calc/screens/psychrometric_calculator.dart';
 
 List dataColor = [
-  {"color": const Color.fromARGB(255, 90, 85, 216)},
+  {"color": AppTheme.colors.card},
   // {"color": const Color.fromARGB(255, 213, 93, 13)},
   // {"color": const Color.fromARGB(255, 189, 134, 97)},
 ];
@@ -25,7 +26,8 @@ class CardWidget extends StatelessWidget {
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: Card(
-                color: const Color.fromARGB(255, 90, 85, 216),
+                shadowColor: const Color.fromARGB(0, 189, 134, 97),
+                color: AppTheme.colors.card,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
@@ -48,9 +50,9 @@ class CardWidget extends StatelessWidget {
                             alignment: Alignment.topRight,
                             decoration: const BoxDecoration(
                                 color: Color.fromRGBO(255, 255, 255, 0.0)),
-                            child: const Icon(
+                            child: Icon(
                               Icons.percent,
-                              color: Color.fromARGB(255, 255, 255, 255),
+                              color: AppTheme.colors.font1,
                               size: 30,
                             ),
                           ),
@@ -59,10 +61,10 @@ class CardWidget extends StatelessWidget {
                             alignment: Alignment.bottomRight,
                             decoration: const BoxDecoration(
                                 color: Color.fromRGBO(255, 255, 255, 0.0)),
-                            child: const Text(
+                            child: Text(
                               'Psychrometric calculator',
                               style: TextStyle(
-                                color: Colors.white,
+                                color: AppTheme.colors.font1,
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),

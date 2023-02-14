@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hvac_calc/main.dart';
+import 'package:hvac_calc/psychrometric.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 
 class PsychrometricCalculator extends StatefulWidget {
   const PsychrometricCalculator({super.key});
@@ -11,6 +13,34 @@ class PsychrometricCalculator extends StatefulWidget {
 class _PsychrometricCalculator extends State<PsychrometricCalculator> {
   final colorsTheme = Colors.black;
 
+  final textController1 = TextEditingController(text: '101325'); // p
+  final textController2 = TextEditingController(text: '0'); // h
+  final textController3 = TextEditingController(text: '20'); // tdb
+  final textController4 = TextEditingController(text: ''); // fi
+  final textController5 = TextEditingController(text: ''); // twb
+  final textController6 = TextEditingController(text: ''); // tdp
+
+  String namePressure = 'Pressure, Pa';
+  String nameAltitude = 'Altitude, m';
+  String nameTdb = 'Tdb, °C';
+  String nameF = 'f, %';
+  String nameTwb = 'Twb, °C';
+  String nameTdp = 'Tdp, °C';
+
+  var greenLabel = 0;
+
+  int? initialIndex = 0;
+
+  @override
+  void dispose() {
+    textController1.dispose();
+    textController2.dispose();
+    textController3.dispose();
+    textController4.dispose();
+    textController5.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,9 +48,9 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
       appBar: AppBar(
         shadowColor: Colors.transparent,
         leading: IconButton(
-          icon: const Icon(
+          icon: Icon(
             Icons.arrow_back,
-            color: Color.fromARGB(255, 59, 54, 84),
+            color: AppTheme.colors.font1,
             size: 25,
           ),
           onPressed: () {
@@ -35,9 +65,52 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           const SizedBox(
+            height: 5.0,
+          ),
+
+          // SI - IP toggle switch
+
+          ToggleSwitch(
+            labels: const ['SI', 'IP'],
+            customTextStyles: [Theme.of(context).textTheme.displaySmall],
+            initialLabelIndex: initialIndex,
+            totalSwitches: 2,
+            minHeight: 30,
+            minWidth: 70,
+            cornerRadius: 15,
+            activeBgColor: [
+              AppTheme.colors.toggle,
+              AppTheme.colors.toggle,
+            ],
+            inactiveBgColor: AppTheme.colors.field,
+            radiusStyle: true,
+            onToggle: (index) {
+              setState(() {
+                if (index == 1) {
+                  namePressure = 'Pressure, in Hg';
+                  nameAltitude = 'Altitude, ft';
+                  nameTdb = 'Tdb, °F';
+                  nameF = 'f, %';
+                  nameTwb = 'Twb, °F';
+                  nameTdp = 'Tdp, °F';
+                } else if (index == 0) {
+                  namePressure = 'Pressure, Pa';
+                  nameAltitude = 'Altitude, m';
+                  nameTdb = 'Tdb, °C';
+                  nameF = 'f, %';
+                  nameTwb = 'Twb, °C';
+                  nameTdp = 'Tdp, °C';
+                }
+                initialIndex = index;
+              });
+            },
+          ),
+          const SizedBox(
             height: 20.0,
           ),
+
           // Pressure and Altitude
+
           Padding(
             padding: const EdgeInsets.only(left: 20.0, right: 20),
             child: Row(
@@ -46,18 +119,31 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                 Flexible(
                   child: Column(
                     children: [
-                      const Text('Pressure, Pa'),
+                      Text(
+                        namePressure,
+                        style: Theme.of(context).textTheme.displaySmall,
+                      ),
                       Container(
                         decoration: BoxDecoration(
                           borderRadius:
                               const BorderRadius.all(Radius.circular(16)),
                           color: AppTheme.colors.field,
                         ),
-                        child: const TextField(
-                          decoration: InputDecoration(
+                        child: TextFormField(
+                          controller: textController1,
+                          onChanged: (value) {
+                            if (value.isNotEmpty) {
+                              textController2.text =
+                                  heightFromPressure(int.parse(value))
+                                      .toStringAsFixed(2);
+                            } else {
+                              textController2.text = '';
+                            }
+                          },
+                          keyboardType: TextInputType.number,
+                          decoration: const InputDecoration(
                             border: InputBorder.none,
                             contentPadding: EdgeInsets.all(6),
-                            hintText: '101325',
                           ),
                         ),
                       ),
@@ -70,18 +156,31 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                 Flexible(
                   child: Column(
                     children: [
-                      const Text('Altitude, m'),
+                      Text(
+                        nameAltitude,
+                        style: Theme.of(context).textTheme.displaySmall,
+                      ),
                       Container(
                         decoration: BoxDecoration(
                           borderRadius:
                               const BorderRadius.all(Radius.circular(16)),
                           color: AppTheme.colors.field,
                         ),
-                        child: const TextField(
-                          decoration: InputDecoration(
+                        child: TextFormField(
+                          controller: textController2,
+                          onChanged: (value) {
+                            if (value.isNotEmpty) {
+                              textController1.text =
+                                  pressureFromHeight(int.parse(value))
+                                      .toStringAsFixed(0);
+                            } else {
+                              textController1.text = '';
+                            }
+                          },
+                          keyboardType: TextInputType.number,
+                          decoration: const InputDecoration(
                             border: InputBorder.none,
                             contentPadding: EdgeInsets.all(6),
-                            hintText: '0',
                           ),
                         ),
                       ),
@@ -99,25 +198,29 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
             padding: const EdgeInsets.only(left: 20.0, right: 20),
             child: Column(
               children: [
-                const Text('Tdb, °C'),
+                Tooltip(
+                  verticalOffset: 11,
+                  message: 'Dry bulb temperature',
+                  triggerMode: TooltipTriggerMode.tap,
+                  child: Text(
+                    nameTdb,
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
+                ),
                 Container(
                   width: 155,
                   decoration: BoxDecoration(
                     borderRadius: const BorderRadius.all(Radius.circular(16)),
                     color: AppTheme.colors.field,
                   ),
-                  child: const TextField(
-                    decoration: InputDecoration(
+                  child: TextFormField(
+                    controller: textController3,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.all(6),
-                      hintText: '20',
                     ),
                   ),
-                ),
-                const Text(
-                  'Dry bulb temperature',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 10),
                 ),
               ],
             ),
@@ -134,24 +237,66 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                 Flexible(
                   child: Column(
                     children: [
-                      const Text('f, %'),
+                      Tooltip(
+                        verticalOffset: 11,
+                        message: 'Relative humidity',
+                        triggerMode: TooltipTriggerMode.tap,
+                        child: Text(
+                          nameF,
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
+                      ),
                       Container(
                         decoration: BoxDecoration(
                           borderRadius:
                               const BorderRadius.all(Radius.circular(16)),
                           color: AppTheme.colors.field,
                         ),
-                        child: const TextField(
+                        child: TextFormField(
+                          controller: textController4,
+                          onChanged: (value) {
+                            setState(() {
+                              greenLabel = 1;
+                            });
+                            if (value.isNotEmpty) {
+                              textController5.text = getTWetBulbFromRelHum(
+                                fi: num.parse(value) / 100,
+                                tdb: num.parse(textController3.text),
+                                p: num.parse(textController1.text),
+                              ).toStringAsFixed(1);
+                              textController6.text = getTDewPointFromRelHum(
+                                fi: num.parse(value) / 100,
+                                tdb: num.parse(textController3.text),
+                              ).toStringAsFixed(1);
+                              calcPsychrometricsFromRelHum(
+                                tdb: int.parse(textController3.text),
+                                fi: int.parse(value),
+                                p: num.parse(textController1.text),
+                              );
+                            } else {
+                              textController5.text = '';
+                              textController6.text = '';
+                              outputHR = '';
+                              outputV = '';
+                              outputMU = '';
+                              outputH = '';
+                              outputVP = '';
+                              outputSVP = '';
+                            }
+                          },
+                          keyboardType: TextInputType.number,
+                          textAlignVertical: TextAlignVertical.center,
                           decoration: InputDecoration(
+                            suffixIcon: Icon(
+                              Icons.check,
+                              color: greenLabel == 1
+                                  ? Colors.green
+                                  : const Color.fromARGB(0, 244, 67, 54),
+                            ),
                             border: InputBorder.none,
-                            contentPadding: EdgeInsets.all(6),
+                            contentPadding: const EdgeInsets.all(6),
                           ),
                         ),
-                      ),
-                      const Text(
-                        'Relative \nhumidity',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 10),
                       ),
                     ],
                   ),
@@ -162,24 +307,69 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                 Flexible(
                   child: Column(
                     children: [
-                      const Text('Twb, °C'),
+                      Tooltip(
+                        verticalOffset: 11,
+                        message: 'Wet bulb temperature',
+                        triggerMode: TooltipTriggerMode.tap,
+                        child: Text(
+                          nameTwb,
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
+                      ),
                       Container(
                         decoration: BoxDecoration(
                           borderRadius:
                               const BorderRadius.all(Radius.circular(16)),
                           color: AppTheme.colors.field,
                         ),
-                        child: const TextField(
+                        child: TextFormField(
+                          controller: textController5,
+                          onChanged: (value) {
+                            setState(() {
+                              greenLabel = 2;
+                            });
+                            if (value.isNotEmpty) {
+                              textController6.text = getTDewPointFromTWetBulb(
+                                twb: num.parse(value),
+                                tdb: num.parse(textController3.text),
+                                p: num.parse(textController1.text),
+                              ).toStringAsFixed(1);
+                              textController4.text = (getRelHumFromTWetBulb(
+                                        twb: num.parse(value),
+                                        tdb: num.parse(textController3.text),
+                                        p: num.parse(textController1.text),
+                                      ) *
+                                      100)
+                                  .toStringAsFixed(1);
+                              calcPsychrometricsFromTWetBulb(
+                                tdb: int.parse(textController3.text),
+                                twb: int.parse(value),
+                                p: num.parse(textController1.text),
+                              );
+                            } else {
+                              textController4.text = '';
+                              textController6.text = '';
+                              outputHR = '';
+                              outputV = '';
+                              outputMU = '';
+                              outputH = '';
+                              outputVP = '';
+                              outputSVP = '';
+                            }
+                          },
+                          keyboardType: TextInputType.number,
+                          textAlignVertical: TextAlignVertical.center,
                           decoration: InputDecoration(
+                            suffixIcon: Icon(
+                              Icons.check,
+                              color: greenLabel == 2
+                                  ? Colors.green
+                                  : const Color.fromARGB(0, 244, 67, 54),
+                            ),
                             border: InputBorder.none,
-                            contentPadding: EdgeInsets.all(6),
+                            contentPadding: const EdgeInsets.all(6),
                           ),
                         ),
-                      ),
-                      const Text(
-                        'Wet bulb \ntemperature',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 10),
                       ),
                     ],
                   ),
@@ -190,24 +380,68 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                 Flexible(
                   child: Column(
                     children: [
-                      const Text('Tdp, °C'),
+                      Tooltip(
+                        verticalOffset: 11,
+                        message: 'Dew point temperature',
+                        triggerMode: TooltipTriggerMode.tap,
+                        child: Text(
+                          nameTdp,
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
+                      ),
                       Container(
                         decoration: BoxDecoration(
                           borderRadius:
                               const BorderRadius.all(Radius.circular(16)),
                           color: AppTheme.colors.field,
                         ),
-                        child: const TextField(
+                        child: TextFormField(
+                          controller: textController6,
+                          onChanged: (value) {
+                            setState(() {
+                              greenLabel = 3;
+                            });
+                            if (value.isNotEmpty) {
+                              textController5.text = getTWetBulbFromTDewPoint(
+                                tdp: num.parse(value),
+                                tdb: num.parse(textController3.text),
+                                p: num.parse(textController1.text),
+                              ).toStringAsFixed(1);
+                              textController4.text = (getRelHumFromTDewPoint(
+                                        tdp: num.parse(value),
+                                        tdb: num.parse(textController3.text),
+                                      ) *
+                                      100)
+                                  .toStringAsFixed(1);
+                              calcPsychrometricsFromTDewPoint(
+                                tdb: int.parse(textController3.text),
+                                tdp: int.parse(value),
+                                p: num.parse(textController1.text),
+                              );
+                            } else {
+                              textController4.text = '';
+                              textController5.text = '';
+                              outputHR = '';
+                              outputV = '';
+                              outputMU = '';
+                              outputH = '';
+                              outputVP = '';
+                              outputSVP = '';
+                            }
+                          },
+                          keyboardType: TextInputType.number,
+                          textAlignVertical: TextAlignVertical.center,
                           decoration: InputDecoration(
+                            suffixIcon: Icon(
+                              Icons.check,
+                              color: greenLabel == 3
+                                  ? Colors.green
+                                  : const Color.fromARGB(0, 244, 67, 54),
+                            ),
                             border: InputBorder.none,
-                            contentPadding: EdgeInsets.all(6),
+                            contentPadding: const EdgeInsets.all(6),
                           ),
                         ),
-                      ),
-                      const Text(
-                        'Dew point \ntemperature',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 10),
                       ),
                     ],
                   ),
@@ -244,9 +478,15 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                               topLeft: Radius.circular(20)),
                           color: AppTheme.colors.results,
                         ),
-                        child: Text(
-                          'HR',
-                          style: Theme.of(context).textTheme.headlineMedium,
+                        child: Tooltip(
+                          verticalOffset: 11,
+                          message:
+                              'Humidity ratio, g of moisture per kg of dry air',
+                          triggerMode: TooltipTriggerMode.tap,
+                          child: Text(
+                            'HR',
+                            style: Theme.of(context).textTheme.headlineLarge,
+                          ),
                         ),
                       ),
                     ],
@@ -264,8 +504,8 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                         decoration: BoxDecoration(
                           color: AppTheme.colors.results,
                         ),
-                        child: Text(
-                          '14.70',
+                        child: SelectableText(
+                          outputHR,
                           style: Theme.of(context).textTheme.headlineMedium,
                         ),
                       ),
@@ -287,7 +527,7 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                           color: AppTheme.colors.results,
                         ),
                         child: Text(
-                          'gH20/kgAir',
+                          outputHRsiip,
                           style: Theme.of(context).textTheme.headlineMedium,
                         ),
                       ),
@@ -315,8 +555,33 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                         decoration: BoxDecoration(
                           color: AppTheme.colors.results,
                         ),
-                        child: Text(
-                          'v',
+                        child: Tooltip(
+                          verticalOffset: 11,
+                          message: 'Specific volume',
+                          triggerMode: TooltipTriggerMode.tap,
+                          child: Text(
+                            'v',
+                            style: Theme.of(context).textTheme.headlineLarge,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  width: 6.0,
+                ),
+                Flexible(
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 46,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: AppTheme.colors.results,
+                        ),
+                        child: SelectableText(
+                          outputV,
                           style: Theme.of(context).textTheme.headlineMedium,
                         ),
                       ),
@@ -336,27 +601,7 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                           color: AppTheme.colors.results,
                         ),
                         child: Text(
-                          '0.85',
-                          style: Theme.of(context).textTheme.headlineMedium,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  width: 6.0,
-                ),
-                Flexible(
-                  child: Column(
-                    children: [
-                      Container(
-                        height: 46,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: AppTheme.colors.results,
-                        ),
-                        child: Text(
-                          'm3/kg',
+                          outputVsiip,
                           style: Theme.of(context).textTheme.headlineMedium,
                         ),
                       ),
@@ -384,8 +629,33 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                         decoration: BoxDecoration(
                           color: AppTheme.colors.results,
                         ),
-                        child: Text(
-                          'MU',
+                        child: Tooltip(
+                          verticalOffset: 11,
+                          message: 'Degree of saturation',
+                          triggerMode: TooltipTriggerMode.tap,
+                          child: Text(
+                            'MU',
+                            style: Theme.of(context).textTheme.headlineLarge,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  width: 6.0,
+                ),
+                Flexible(
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 46,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: AppTheme.colors.results,
+                        ),
+                        child: SelectableText(
+                          outputMU,
                           style: Theme.of(context).textTheme.headlineMedium,
                         ),
                       ),
@@ -405,27 +675,7 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                           color: AppTheme.colors.results,
                         ),
                         child: Text(
-                          '1.000',
-                          style: Theme.of(context).textTheme.headlineMedium,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  width: 6.0,
-                ),
-                Flexible(
-                  child: Column(
-                    children: [
-                      Container(
-                        height: 46,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: AppTheme.colors.results,
-                        ),
-                        child: Text(
-                          ' ',
+                          outputMUsiip,
                           style: Theme.of(context).textTheme.headlineMedium,
                         ),
                       ),
@@ -453,8 +703,33 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                         decoration: BoxDecoration(
                           color: AppTheme.colors.results,
                         ),
-                        child: Text(
-                          'h',
+                        child: Tooltip(
+                          verticalOffset: 11,
+                          message: 'Enthalpy',
+                          triggerMode: TooltipTriggerMode.tap,
+                          child: Text(
+                            'h',
+                            style: Theme.of(context).textTheme.headlineLarge,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  width: 6.0,
+                ),
+                Flexible(
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 46,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: AppTheme.colors.results,
+                        ),
+                        child: SelectableText(
+                          outputH,
                           style: Theme.of(context).textTheme.headlineMedium,
                         ),
                       ),
@@ -474,27 +749,7 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                           color: AppTheme.colors.results,
                         ),
                         child: Text(
-                          '57.42',
-                          style: Theme.of(context).textTheme.headlineMedium,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  width: 6.0,
-                ),
-                Flexible(
-                  child: Column(
-                    children: [
-                      Container(
-                        height: 46,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: AppTheme.colors.results,
-                        ),
-                        child: Text(
-                          'kJ/kg',
+                          outputHsiip,
                           style: Theme.of(context).textTheme.headlineMedium,
                         ),
                       ),
@@ -522,8 +777,33 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                         decoration: BoxDecoration(
                           color: AppTheme.colors.results,
                         ),
-                        child: Text(
-                          'VP',
+                        child: Tooltip(
+                          verticalOffset: 11,
+                          message: 'Vapour pressure',
+                          triggerMode: TooltipTriggerMode.tap,
+                          child: Text(
+                            'VP',
+                            style: Theme.of(context).textTheme.headlineLarge,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  width: 6.0,
+                ),
+                Flexible(
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 46,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: AppTheme.colors.results,
+                        ),
+                        child: SelectableText(
+                          outputVP,
                           style: Theme.of(context).textTheme.headlineMedium,
                         ),
                       ),
@@ -543,27 +823,7 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                           color: AppTheme.colors.results,
                         ),
                         child: Text(
-                          '2338.80',
-                          style: Theme.of(context).textTheme.headlineMedium,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  width: 6.0,
-                ),
-                Flexible(
-                  child: Column(
-                    children: [
-                      Container(
-                        height: 46,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: AppTheme.colors.results,
-                        ),
-                        child: Text(
-                          'Pa',
+                          outputVPsiip,
                           style: Theme.of(context).textTheme.headlineMedium,
                         ),
                       ),
@@ -593,9 +853,14 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                               bottomLeft: Radius.circular(20)),
                           color: AppTheme.colors.results,
                         ),
-                        child: Text(
-                          'SVP',
-                          style: Theme.of(context).textTheme.headlineMedium,
+                        child: Tooltip(
+                          verticalOffset: 11,
+                          message: 'Saturation vapour pressure',
+                          triggerMode: TooltipTriggerMode.tap,
+                          child: Text(
+                            'SVP',
+                            style: Theme.of(context).textTheme.headlineLarge,
+                          ),
                         ),
                       ),
                     ],
@@ -613,8 +878,8 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                         decoration: BoxDecoration(
                           color: AppTheme.colors.results,
                         ),
-                        child: Text(
-                          '2338.80',
+                        child: SelectableText(
+                          outputSVP,
                           style: Theme.of(context).textTheme.headlineMedium,
                         ),
                       ),
@@ -636,7 +901,7 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                           color: AppTheme.colors.results,
                         ),
                         child: Text(
-                          'Pa',
+                          outputSVPsiip,
                           style: Theme.of(context).textTheme.headlineMedium,
                         ),
                       ),
