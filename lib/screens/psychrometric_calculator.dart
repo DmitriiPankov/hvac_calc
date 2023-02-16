@@ -10,12 +10,14 @@ class PsychrometricCalculator extends StatefulWidget {
   State<PsychrometricCalculator> createState() => _PsychrometricCalculator();
 }
 
+int? initialIndex = 0;
+
 class _PsychrometricCalculator extends State<PsychrometricCalculator> {
   final colorsTheme = Colors.black;
 
   final textController1 = TextEditingController(text: '101325'); // p
   final textController2 = TextEditingController(text: '0'); // h
-  final textController3 = TextEditingController(text: '20'); // tdb
+  final textController3 = TextEditingController(text: '20.0'); // tdb
   final textController4 = TextEditingController(text: ''); // fi
   final textController5 = TextEditingController(text: ''); // twb
   final textController6 = TextEditingController(text: ''); // tdp
@@ -28,11 +30,12 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
   String nameTdp = 'Tdp, °C';
 
   var greenLabel = 0;
-
-  int? initialIndex = 0;
+  var label1 = 0;
+  var label2 = 0;
 
   @override
   void dispose() {
+    initialIndex = 0;
     textController1.dispose();
     textController2.dispose();
     textController3.dispose();
@@ -86,25 +89,66 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
             radiusStyle: true,
             onToggle: (index) {
               setState(() {
-                if (index == 1) {
+                if (index == 1 && label1 == 0) {
                   namePressure = 'Pressure, in Hg';
                   nameAltitude = 'Altitude, ft';
                   nameTdb = 'Tdb, °F';
                   nameF = 'f, %';
                   nameTwb = 'Twb, °F';
                   nameTdp = 'Tdp, °F';
-                } else if (index == 0) {
+                  label1 = 1;
+                  label2 = 0;
+
+                  // from SI to IP
+
+                  textController1.text =
+                      (double.parse(textController1.text) / 1000 * 0.2953)
+                          .toStringAsFixed(4);
+                  textController2.text =
+                      (double.parse(textController2.text) * 3.28)
+                          .toStringAsFixed(0);
+                  textController3.text =
+                      ((double.parse(textController3.text) * 9 / 5) + 32)
+                          .toStringAsFixed(1);
+                  textController5.text =
+                      (((double.parse(textController5.text)) * 9 / 5) + 32)
+                          .toStringAsFixed(1);
+                  textController6.text =
+                      (((double.parse(textController6.text)) * 9 / 5) + 32)
+                          .toStringAsFixed(1);
+
+                  // from IP to SI
+                } else if (index == 0 && label2 == 0) {
                   namePressure = 'Pressure, Pa';
                   nameAltitude = 'Altitude, m';
                   nameTdb = 'Tdb, °C';
                   nameF = 'f, %';
                   nameTwb = 'Twb, °C';
                   nameTdp = 'Tdp, °C';
+                  label2 = 1;
+                  label1 = 0;
+
+                  textController1.text =
+                      (double.parse(textController1.text) * 1000 / 0.2953)
+                          .toStringAsFixed(0);
+                  textController2.text =
+                      (double.parse(textController2.text) / 3.28)
+                          .toStringAsFixed(0);
+                  textController3.text =
+                      ((double.parse(textController3.text) - 32) * 5 / 9)
+                          .toStringAsFixed(1);
+                  textController5.text =
+                      ((double.parse(textController5.text) - 32) * 5 / 9)
+                          .toStringAsFixed(1);
+                  textController6.text =
+                      ((double.parse(textController6.text) - 32) * 5 / 9)
+                          .toStringAsFixed(1);
                 }
                 initialIndex = index;
               });
             },
           ),
+
           const SizedBox(
             height: 20.0,
           ),
@@ -129,13 +173,26 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                               const BorderRadius.all(Radius.circular(16)),
                           color: AppTheme.colors.field,
                         ),
+
+                        // Pressure TextFormField
+
                         child: TextFormField(
                           controller: textController1,
                           onChanged: (value) {
                             if (value.isNotEmpty) {
-                              textController2.text =
-                                  heightFromPressure(int.parse(value))
-                                      .toStringAsFixed(2);
+                              // SI - IP checking
+                              if (initialIndex == 0) {
+                                textController2.text =
+                                    heightFromPressure(double.parse(value))
+                                        .toStringAsFixed(0);
+                              } else if (initialIndex == 1) {
+                                textController2.text = (heightFromPressure(
+                                            double.parse(value) *
+                                                1000 /
+                                                0.2953) *
+                                        3.28)
+                                    .toStringAsFixed(0);
+                              }
                             } else {
                               textController2.text = '';
                             }
@@ -166,13 +223,25 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                               const BorderRadius.all(Radius.circular(16)),
                           color: AppTheme.colors.field,
                         ),
+
+                        // Altitude TextFormField
+
                         child: TextFormField(
                           controller: textController2,
                           onChanged: (value) {
                             if (value.isNotEmpty) {
-                              textController1.text =
-                                  pressureFromHeight(int.parse(value))
-                                      .toStringAsFixed(0);
+                              // SI - IP checking
+                              if (initialIndex == 0) {
+                                textController1.text =
+                                    pressureFromHeight(double.parse(value))
+                                        .toStringAsFixed(0);
+                              } else if (initialIndex == 1) {
+                                textController1.text = (pressureFromHeight(
+                                            double.parse(value) / 3.28) /
+                                        1000 *
+                                        0.2953)
+                                    .toStringAsFixed(4);
+                              }
                             } else {
                               textController1.text = '';
                             }
@@ -190,10 +259,13 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
               ],
             ),
           ),
+
           const SizedBox(
             height: 20.0,
           ),
+
           // Tdb
+
           Padding(
             padding: const EdgeInsets.only(left: 20.0, right: 20),
             child: Column(
@@ -213,6 +285,9 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                     borderRadius: const BorderRadius.all(Radius.circular(16)),
                     color: AppTheme.colors.field,
                   ),
+
+                  // Tdb TextFormField
+
                   child: TextFormField(
                     controller: textController3,
                     keyboardType: TextInputType.number,
@@ -225,15 +300,20 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
               ],
             ),
           ),
+
           const SizedBox(
             height: 20.0,
           ),
+
           // f, Twb, Tdp
+
           Padding(
             padding: const EdgeInsets.only(left: 20.0, right: 20),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
+                // f
+
                 Flexible(
                   child: Column(
                     children: [
@@ -252,6 +332,9 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                               const BorderRadius.all(Radius.circular(16)),
                           color: AppTheme.colors.field,
                         ),
+
+                        // f TextFormField
+
                         child: TextFormField(
                           controller: textController4,
                           onChanged: (value) {
@@ -259,20 +342,43 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                               greenLabel = 1;
                             });
                             if (value.isNotEmpty) {
-                              textController5.text = getTWetBulbFromRelHum(
-                                fi: num.parse(value) / 100,
-                                tdb: num.parse(textController3.text),
-                                p: num.parse(textController1.text),
-                              ).toStringAsFixed(1);
-                              textController6.text = getTDewPointFromRelHum(
-                                fi: num.parse(value) / 100,
-                                tdb: num.parse(textController3.text),
-                              ).toStringAsFixed(1);
-                              calcPsychrometricsFromRelHum(
-                                tdb: int.parse(textController3.text),
-                                fi: int.parse(value),
-                                p: num.parse(textController1.text),
-                              );
+                              // SI - IP checking
+                              if (initialIndex == 0) {
+                                textController5.text = getTWetBulbFromRelHum(
+                                  fi: double.parse(value) / 100,
+                                  tdb: double.parse(textController3.text),
+                                  p: double.parse(textController1.text),
+                                ).toStringAsFixed(1);
+
+                                textController6.text = getTDewPointFromRelHum(
+                                  fi: double.parse(value) / 100,
+                                  tdb: double.parse(textController3.text),
+                                ).toStringAsFixed(1);
+
+                                calcPsychrometricsFromRelHum(
+                                  tdb: double.parse(textController3.text),
+                                  fi: double.parse(value),
+                                  p: double.parse(textController1.text),
+                                );
+                              } else if (initialIndex == 1) {
+
+                                textController5.text = ((getTWetBulbFromRelHum(
+                                  fi: double.parse(value) / 100,
+                                  tdb: ((double.parse(textController3.text) - 32) * 5 / 9),
+                                  p: (double.parse(textController1.text) * 1000 / 0.2953),
+                                ) * 9 / 5) + 32).toStringAsFixed(1);
+
+                                textController6.text = ((getTDewPointFromRelHum(
+                                  fi: double.parse(value) / 100,
+                                  tdb: ((double.parse(textController3.text) - 32) * 5 / 9),
+                                ) * 9 / 5) + 32).toStringAsFixed(1);
+
+                                calcPsychrometricsFromRelHum(
+                                  tdb: ((double.parse(textController3.text) - 32) * 5 / 9),
+                                  fi: double.parse(value),
+                                  p: (double.parse(textController1.text) * 1000 / 0.2953),
+                                );
+                              }
                             } else {
                               textController5.text = '';
                               textController6.text = '';
@@ -304,6 +410,9 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                 const SizedBox(
                   width: 20.0,
                 ),
+
+                // Twb
+
                 Flexible(
                   child: Column(
                     children: [
@@ -322,6 +431,9 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                               const BorderRadius.all(Radius.circular(16)),
                           color: AppTheme.colors.field,
                         ),
+
+                        // Twb TextFormField
+
                         child: TextFormField(
                           controller: textController5,
                           onChanged: (value) {
@@ -329,23 +441,44 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                               greenLabel = 2;
                             });
                             if (value.isNotEmpty) {
-                              textController6.text = getTDewPointFromTWetBulb(
-                                twb: num.parse(value),
-                                tdb: num.parse(textController3.text),
-                                p: num.parse(textController1.text),
-                              ).toStringAsFixed(1);
-                              textController4.text = (getRelHumFromTWetBulb(
-                                        twb: num.parse(value),
-                                        tdb: num.parse(textController3.text),
-                                        p: num.parse(textController1.text),
-                                      ) *
-                                      100)
-                                  .toStringAsFixed(1);
-                              calcPsychrometricsFromTWetBulb(
-                                tdb: int.parse(textController3.text),
-                                twb: int.parse(value),
-                                p: num.parse(textController1.text),
-                              );
+                              // SI - IP checking
+                              if (initialIndex == 0) {
+                                textController6.text = getTDewPointFromTWetBulb(
+                                  twb: double.parse(value),
+                                  tdb: double.parse(textController3.text),
+                                  p: double.parse(textController1.text),
+                                ).toStringAsFixed(1);
+
+                                textController4.text = (getRelHumFromTWetBulb(
+                                  twb: double.parse(value),
+                                  tdb: double.parse(textController3.text),
+                                  p: double.parse(textController1.text),
+                                ) * 100).toStringAsFixed(1);
+
+                                calcPsychrometricsFromTWetBulb(
+                                  tdb: double.parse(textController3.text),
+                                  twb: double.parse(value),
+                                  p: double.parse(textController1.text),
+                                );
+                              } else if (initialIndex == 1) {
+                                textController6.text = ((getTDewPointFromTWetBulb(
+                                  twb: ((double.parse(value) - 32) * 5 / 9),
+                                  tdb: ((double.parse(textController3.text) - 32) * 5 / 9),
+                                  p: (double.parse(textController1.text) * 1000 / 0.2953),
+                                ) * 9 / 5) + 32).toStringAsFixed(1);
+
+                                textController4.text = (getRelHumFromTWetBulb(
+                                  twb: ((double.parse(value) - 32) * 5 / 9),
+                                  tdb: ((double.parse(textController3.text) - 32) * 5 / 9),
+                                  p: (double.parse(textController1.text) * 1000 / 0.2953),
+                                ) * 100).toStringAsFixed(1);
+
+                                calcPsychrometricsFromTWetBulb(
+                                  tdb: ((double.parse(textController3.text) - 32) * 5 / 9),
+                                  twb: ((double.parse(value) - 32) * 5 / 9),
+                                  p: (double.parse(textController1.text) * 1000 / 0.2953),
+                                );
+                              }
                             } else {
                               textController4.text = '';
                               textController6.text = '';
@@ -377,6 +510,9 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                 const SizedBox(
                   width: 20.0,
                 ),
+
+                // Tdp
+
                 Flexible(
                   child: Column(
                     children: [
@@ -395,6 +531,9 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                               const BorderRadius.all(Radius.circular(16)),
                           color: AppTheme.colors.field,
                         ),
+
+                        // Tdp TextFormField
+
                         child: TextFormField(
                           controller: textController6,
                           onChanged: (value) {
@@ -402,22 +541,43 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                               greenLabel = 3;
                             });
                             if (value.isNotEmpty) {
-                              textController5.text = getTWetBulbFromTDewPoint(
-                                tdp: num.parse(value),
-                                tdb: num.parse(textController3.text),
-                                p: num.parse(textController1.text),
-                              ).toStringAsFixed(1);
-                              textController4.text = (getRelHumFromTDewPoint(
-                                        tdp: num.parse(value),
-                                        tdb: num.parse(textController3.text),
-                                      ) *
-                                      100)
-                                  .toStringAsFixed(1);
-                              calcPsychrometricsFromTDewPoint(
-                                tdb: int.parse(textController3.text),
-                                tdp: int.parse(value),
-                                p: num.parse(textController1.text),
-                              );
+                               // SI - IP checking
+                              if (initialIndex == 0) {
+
+                                textController5.text = getTWetBulbFromTDewPoint(
+                                  tdp: double.parse(value),
+                                  tdb: double.parse(textController3.text),
+                                  p: double.parse(textController1.text),
+                                ).toStringAsFixed(1);
+
+                                textController4.text = (getRelHumFromTDewPoint(
+                                  tdp: double.parse(value),
+                                  tdb: double.parse(textController3.text),
+                                ) * 100).toStringAsFixed(1);
+
+                                calcPsychrometricsFromTDewPoint(
+                                  tdb: double.parse(textController3.text),
+                                  tdp: double.parse(value),
+                                  p: double.parse(textController1.text),
+                                );
+                              } else if (initialIndex == 1) {
+                                textController5.text = ((getTWetBulbFromTDewPoint(
+                                  tdp: ((double.parse(value) - 32) * 5 / 9),
+                                  tdb: ((double.parse(textController3.text) - 32) * 5 / 9),
+                                  p: (double.parse(textController1.text) * 1000 / 0.2953),
+                                ) * 9 / 5) + 32).toStringAsFixed(1);
+
+                                textController4.text = (getRelHumFromTDewPoint(
+                                  tdp: ((double.parse(value) - 32) * 5 / 9),
+                                  tdb: ((double.parse(textController3.text) - 32) * 5 / 9),
+                                ) * 100).toStringAsFixed(1);
+
+                                calcPsychrometricsFromTDewPoint(
+                                  tdb: ((double.parse(textController3.text) - 32) * 5 / 9),
+                                  tdp: ((double.parse(value) - 32) * 5 / 9),
+                                  p: (double.parse(textController1.text) * 1000 / 0.2953),
+                                );
+                              }
                             } else {
                               textController4.text = '';
                               textController5.text = '';
@@ -449,11 +609,13 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
               ],
             ),
           ),
+
           const SizedBox(
             height: 28.0,
           ),
 
           // Results
+
           SizedBox(
             height: 26.0,
             child: Text(
@@ -461,7 +623,9 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
               style: Theme.of(context).textTheme.headlineMedium,
             ),
           ),
+
           // HR
+
           Padding(
             padding: const EdgeInsets.only(left: 20.0, right: 20),
             child: Row(
@@ -481,7 +645,7 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                         child: Tooltip(
                           verticalOffset: 11,
                           message:
-                              'Humidity ratio, g of moisture per kg of dry air',
+                            'Humidity ratio, g of moisture per kg of dry air',
                           triggerMode: TooltipTriggerMode.tap,
                           child: Text(
                             'HR',
@@ -529,6 +693,7 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                         child: Text(
                           outputHRsiip,
                           style: Theme.of(context).textTheme.headlineMedium,
+                          textAlign: TextAlign.center,
                         ),
                       ),
                     ],
@@ -537,10 +702,13 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
               ],
             ),
           ),
+
           const SizedBox(
             height: 6.0,
           ),
+
           // v
+
           Padding(
             padding: const EdgeInsets.only(left: 20.0, right: 20),
             child: Row(
@@ -611,10 +779,13 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
               ],
             ),
           ),
+
           const SizedBox(
             height: 6.0,
           ),
+
           // MU
+
           Padding(
             padding: const EdgeInsets.only(left: 20.0, right: 20),
             child: Row(
@@ -685,10 +856,13 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
               ],
             ),
           ),
+
           const SizedBox(
             height: 6.0,
           ),
+
           // h
+
           Padding(
             padding: const EdgeInsets.only(left: 20.0, right: 20),
             child: Row(
@@ -759,10 +933,13 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
               ],
             ),
           ),
+
           const SizedBox(
             height: 6.0,
           ),
+
           // VP
+
           Padding(
             padding: const EdgeInsets.only(left: 20.0, right: 20),
             child: Row(
@@ -833,10 +1010,13 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
               ],
             ),
           ),
+
           const SizedBox(
             height: 6.0,
           ),
+
           // SVP
+
           Padding(
             padding: const EdgeInsets.only(left: 20.0, right: 20),
             child: Row(

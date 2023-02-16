@@ -3,6 +3,7 @@
 //*****************************************************************************
 
 import 'dart:math';
+import 'package:hvac_calc/screens/psychrometric_calculator.dart';
 
 double tC = 20;
 double p = 101325;
@@ -560,7 +561,7 @@ calcPsychrometricsFromRelHum(
 psiCalcGetOutput(w, vma, degSaturation, ima, pv, satVapPres) {
   // if (document.getElementsByName('group1')[0].checked) {
   //  if (querySelectorAll('[name="group1"]')[0].checked) {
-  if (p > 1) {
+  if (initialIndex == 0) {
     // Si calculation
     outputHR = (w * 1000).toStringAsFixed(2);
     outputV = vma.toStringAsFixed(3);
