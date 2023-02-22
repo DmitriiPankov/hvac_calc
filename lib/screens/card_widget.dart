@@ -34,13 +34,16 @@ class CardWidget extends StatelessWidget {
                           padding: const EdgeInsets.all(10.0),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              Icon(
-                                  Icons.percent,
-                                  color: AppTheme.colors.font1,
-                                  size: 26,
-                                ),
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: Icon(
+                                    Icons.percent,
+                                    color: AppTheme.colors.font1,
+                                    size: 26,
+                                  ),
+                              ),
                               Text(
                                 'Psychrometric calculator',
                                 style: TextStyle(

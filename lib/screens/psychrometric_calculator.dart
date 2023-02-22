@@ -142,7 +142,7 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
               cornerRadius: 14,
               activeBgColor: [
                 AppTheme.colors.toggle,
-                Color.fromARGB(150, 64, 179, 255),
+                const Color.fromARGB(150, 64, 179, 255),
               ],
               
               inactiveBgColor: AppTheme.colors.field,
