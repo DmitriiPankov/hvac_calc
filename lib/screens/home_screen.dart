@@ -1,25 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:hvac_calc/main.dart';
 import 'package:hvac_calc/screens/card_widget.dart';
-
-/* class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        color: Color.fromARGB(255, 255, 255, 255),
-      ),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        appBar: AppBar(
-          title: const Text('HVAC engineering calculator'),
-        ),
-        body: Container(),
-      ),
-    );
-  } 
-}*/
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -36,17 +18,21 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          // Status bar color
+          statusBarColor: Color.fromARGB(255, 255, 255, 255), 
+          // Status bar brightness (optional)
+          statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
+          statusBarBrightness: Brightness.light, // For iOS (dark icons)
+        ),
         shadowColor: Colors.transparent,
-        /* leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Color.fromARGB(255, 59, 54, 84),
-            size: 25,
-          ),
-          onPressed: () {},
-        ), */
-        title: const Text(
+        title: Text(
           'HVAC engineering calculator',
+          style: TextStyle(
+            fontFamily: 'RobotoMono',
+            color: AppTheme.colors.font1,
+            fontSize: 15,
+          ),
         ),
         centerTitle: true,
       ),

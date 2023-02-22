@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
         textTheme: TextTheme(
             headlineMedium: TextStyle(
               fontFamily: 'RobotoMono',
-              fontSize: 16,
+              fontSize: 15,
               color: AppTheme.colors.font1,
             ),
             headlineLarge: TextStyle(
@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
                     color: AppTheme.colors.font1, offset: const Offset(0, -2))
               ],
               fontFamily: 'RobotoMono',
-              fontSize: 16,
+              fontSize: 15,
               color: const Color.fromARGB(0, 3, 35, 76),
               decoration: TextDecoration.underline,
               decorationThickness: 1.0,
@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
                     color: AppTheme.colors.font1, offset: const Offset(0, -2))
               ],
               fontFamily: 'RobotoMono',
-              fontSize: 15,
+              fontSize: 14,
               color: const Color.fromARGB(0, 3, 35, 76),
               decoration: TextDecoration.underline,
               decorationThickness: 1.0,
@@ -57,15 +57,21 @@ class MyApp extends StatelessWidget {
             ),
             displaySmall: TextStyle(
               fontFamily: 'RobotoMono',
-              fontSize: 15,
+              fontSize: 14,
               color: AppTheme.colors.font1,
-            )),
+            ),
+            displayMedium: const TextStyle(
+              fontFamily: 'RobotoMono',
+              fontSize: 12,
+              color: Color.fromARGB(255, 198, 0, 0),
+            )
+          ),
         appBarTheme: AppBarTheme(
           iconTheme: IconThemeData(color: AppTheme.colors.font1),
           foregroundColor: AppTheme.colors.font1,
           titleTextStyle: TextStyle(
             color: AppTheme.colors.font1,
-            fontSize: 18,
+            fontSize: 17,
             fontFamily: 'RobotoMono',
           ),
           backgroundColor: const Color.fromARGB(0, 255, 255, 255),

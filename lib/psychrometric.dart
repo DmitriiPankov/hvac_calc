@@ -32,6 +32,9 @@ String outputHsiip = '';
 String outputVPsiip = '';
 String outputSVPsiip = '';
 
+String errorText = '1111';
+bool errorSwitch = false;
+
 pressureFromHeight(h) {
   var p = 101325 * pow(e, -h / 8435.2);
   return p;
@@ -416,151 +419,236 @@ getMoistAirDensity({required num tC, required num w, required num p}) {
 //                Functions to set all psychrometric values
 //*****************************************************************************
 
-calcPsychrometricsFromTWetBulb(
-    {required num tdb, required num twb, required num p}) {
+calcPsychrometricsFromTWetBulb({required num tdb, required num twb, required num p}) {
   //tdb, twb, p
   var w = getHumRatioFromTWetBulb(tdb: tdb, twb: twb, p: p);
-  var tdp = getTDewPointFromHumRatio(w: w, tdb: tdb, p: p);
+  // var tdp = getTDewPointFromHumRatio(w: w, tdb: tdb, p: p);
   var fi = getRelHumFromHumRatio(tC: tdb, w: w, p: p);
+  var pv = getVapPresFromHumRatio(w: w, p: p);
+  var ima = getMoistAirEnthalpy(tC: tdb, w: w);
+  var vma = getMoistAirVolume(tC: tdb, w: w, p: p);
+  var degSaturation = getDegreeOfSaturation(tC: tdb, w: w, p: p);
+  var satVapPres = getSatVapPres(tC: tdb);
 
   if (tdb.isNaN || twb.isNaN || p.isNaN) {
-    return {popUp: "Incorrect value", fi: '', tdp: ''};
-  }
+    errorText = 'Incorrect values';
+    errorSwitch = true;
+    textController4.text = '';
+    textController6.text = '';
+    outputHR = '';
+    outputV = '';
+    outputMU = '';
+    outputH = '';
+    outputVP = '';
+    outputSVP = '';
+  } else
   if (tdb > 93 || tdb < -100) {
-    return {
-      popUp:
-          "Dry bulb temperature is outside range [-100...+93] °C or [-148...+199] °F",
-      fi: '',
-      tdp: ''
-    };
-  }
+    errorText = "Dry bulb temperature is outside range [-100...+93] °C or [-148...+199] °F";
+    errorSwitch = true;
+    textController4.text = '';
+    textController6.text = '';
+    outputHR = '';
+    outputV = '';
+    outputMU = '';
+    outputH = '';
+    outputVP = '';
+    outputSVP = '';
+  } else
   if (tdb * 1 < twb * 1) {
-    return {
-      popUp: "<Wet bulb temperature is above dry bulb temperature",
-      fi: '',
-      tdp: ''
-    };
-  }
+    errorText = "Wet bulb temperature is above dry bulb temperature";
+    errorSwitch = true;
+    textController4.text = '';
+    textController6.text = '';
+    outputHR = '';
+    outputV = '';
+    outputMU = '';
+    outputH = '';
+    outputVP = '';
+    outputSVP = '';
+  } else
   if (twb < -100) {
-    return {
-      popUp:
-          "Wet bulb temperature is outside range [-100...+93] °C or [-148...+199] °F",
-      fi: '',
-      tdb: ''
-    };
-  }
-
-  var pv = getVapPresFromHumRatio(w: w, p: p);
-  var ima = getMoistAirEnthalpy(tC: tdb, w: w);
-  var vma = getMoistAirVolume(tC: tdb, w: w, p: p);
-  var degSaturation = getDegreeOfSaturation(tC: tdb, w: w, p: p);
-  var satVapPres = getSatVapPres(tC: tdb);
-
+    errorText = "Wet bulb temperature is outside range [-100...+93] °C or [-148...+199] °F";
+    errorSwitch = true;
+    textController4.text = '';
+    textController6.text = '';
+    outputHR = '';
+    outputV = '';
+    outputMU = '';
+    outputH = '';
+    outputVP = '';
+    outputSVP = '';
+  } else
   if (w * 1 <= 0 || pv * 1 <= 0) {
-    return {popUp: "Incorrect values", fi: '', tdp: ''};
+    errorText = "Incorrect values";
+    errorSwitch = true;
+    textController4.text = '';
+    textController6.text = '';
+    outputHR = '';
+    outputV = '';
+    outputMU = '';
+    outputH = '';
+    outputVP = '';
+    outputSVP = '';
+  } else {
+    errorSwitch = false;
+    psiCalcGetOutput(w, vma, degSaturation, ima, pv, satVapPres);
+    fi = (fi * 100).toStringAsFixed(1);
+    // tdp = tdp;
   }
-  return {
-    popUp: psiCalcGetOutput(w, vma, degSaturation, ima, pv, satVapPres),
-    fi: (fi * 100).toStringAsFixed(1),
-    tdp: tdp
-  };
 }
 
-calcPsychrometricsFromTDewPoint(
-    {required num tdb, required num tdp, required num p}) {
+calcPsychrometricsFromTDewPoint({required num tdb, required num tdp, required num p}) {
   //tdb, tdp, p
   var w = getHumRatioFromTDewPoint(tC: tdp, p: p);
-  var twb = getTWetBulbFromHumRatio(tdb: tdb, p: p, w: w);
+  // var twb = getTWetBulbFromHumRatio(tdb: tdb, p: p, w: w);
   var fi = getRelHumFromHumRatio(tC: tdb, w: w, p: p);
+  var pv = getVapPresFromHumRatio(w: w, p: p);
+  var ima = getMoistAirEnthalpy(tC: tdb, w: w);
+  var vma = getMoistAirVolume(tC: tdb, w: w, p: p);
+  var degSaturation = getDegreeOfSaturation(tC: tdb, w: w, p: p);
+  var satVapPres = getSatVapPres(tC: tdb);
 
   if (tdb.isNaN || tdp.isNaN || p.isNaN) {
-    return {popUp: "Incorrect value", fi: '', twb: ''};
-  }
+    errorText = 'Incorrect values';
+    errorSwitch = true;
+    textController4.text = '';
+    textController5.text = '';
+    outputHR = '';
+    outputV = '';
+    outputMU = '';
+    outputH = '';
+    outputVP = '';
+    outputSVP = '';
+  } else
   if (tdb > 93 || tdb < -100) {
-    return {
-      popUp:
-          "Dry bulb temperature is outside range [-100...+93] °C or [-148...+199] °F",
-      fi: '',
-      twb: ''
-    };
-  }
+    errorText = "Dry bulb temperature is outside range [-100...+93] °C or [-148...+199] °F";
+    errorSwitch = true;
+    textController4.text = '';
+    textController5.text = '';
+    outputHR = '';
+    outputV = '';
+    outputMU = '';
+    outputH = '';
+    outputVP = '';
+    outputSVP = '';
+  } else
   if (tdb * 1 < tdp * 1) {
-    return {
-      popUp: "Dew point temperature is above dry bulb temperature",
-      fi: '',
-      twb: ''
-    };
-  }
+    errorText = "Dew point temperature is above dry bulb temperature";
+    errorSwitch = true;
+    textController4.text = '';
+    textController5.text = '';
+    outputHR = '';
+    outputV = '';
+    outputMU = '';
+    outputH = '';
+    outputVP = '';
+    outputSVP = '';
+  } else
   if (tdp < -100) {
-    return {
-      popUp:
-          "Dew point temperature is outside range [-100...+93] °C or [-148...+199] °F",
-      fi: '',
-      twb: ''
-    };
-  }
-
-  var pv = getVapPresFromHumRatio(w: w, p: p);
-  var ima = getMoistAirEnthalpy(tC: tdb, w: w);
-  var vma = getMoistAirVolume(tC: tdb, w: w, p: p);
-  var degSaturation = getDegreeOfSaturation(tC: tdb, w: w, p: p);
-  var satVapPres = getSatVapPres(tC: tdb);
-
+    errorText = "Dew point temperature is outside range [-100...+93] °C or [-148...+199] °F";
+    errorSwitch = true;
+    textController4.text = '';
+    textController5.text = '';
+    outputHR = '';
+    outputV = '';
+    outputMU = '';
+    outputH = '';
+    outputVP = '';
+    outputSVP = '';
+  } else
   if (w * 1 <= 0 || pv * 1 <= 0) {
-    return {popUp: "Incorrect values", fi: '', tdp: ''};
+    errorText = "Incorrect values";
+    errorSwitch = true;
+    textController4.text = '';
+    textController5.text = '';
+    outputHR = '';
+    outputV = '';
+    outputMU = '';
+    outputH = '';
+    outputVP = '';
+    outputSVP = '';
+  } else {
+    errorSwitch = false;
+    psiCalcGetOutput(w, vma, degSaturation, ima, pv, satVapPres);
+    fi = (fi * 100).toStringAsFixed(1);
+    // twb = twb;
   }
-  return {
-    popUp: psiCalcGetOutput(w, vma, degSaturation, ima, pv, satVapPres),
-    fi: (fi * 100).toStringAsFixed(1),
-    twb: twb
-  };
 }
 
-calcPsychrometricsFromRelHum(
-    {required num tdb, required num fi, required num p}) {
+calcPsychrometricsFromRelHum({required num tdb, required num fi, required num p}) {
   //tdb, fi, p
   var w = getHumRatioFromRelHum(tdb: tdb, fi: fi / 100, p: p);
-  var twb = getTWetBulbFromHumRatio(tdb: tdb, p: p, w: w);
-  var tdp = getTDewPointFromHumRatio(w: w, tdb: tdb, p: p);
-
-  if (tdb.isNaN || fi.isNaN || p.isNaN) {
-    return {popUp: "Incorrect value", twb: '', tdp: ''};
-  }
-  if (tdb > 93 || tdb < -100) {
-    return {
-      popUp:
-          "Dry bulb temperature is outside range [-100...+93] °C or [-148...+199] °F",
-      twb: '',
-      tdp: ''
-    };
-  }
-  if (fi * 1 > 100 || fi * 1 <= 0) {
-    return {
-      popUp: "Relative humidity is outside range [0...100]",
-      twb: '',
-      tdp: ''
-    };
-  }
-
+  // var twb = getTWetBulbFromHumRatio(tdb: tdb, p: p, w: w);
+  // var tdp = getTDewPointFromHumRatio(w: w, tdb: tdb, p: p);
   var pv = getVapPresFromHumRatio(w: w, p: p);
   var ima = getMoistAirEnthalpy(tC: tdb, w: w);
   var vma = getMoistAirVolume(tC: tdb, w: w, p: p);
   var degSaturation = getDegreeOfSaturation(tC: tdb, w: w, p: p);
   var satVapPres = getSatVapPres(tC: tdb);
 
+  if (tdb.isNaN || fi.isNaN || p.isNaN) {
+    errorText = 'Incorrect values';
+    errorSwitch = true;
+    textController5.text = '';
+    textController6.text = '';
+    outputHR = '';
+    outputV = '';
+    outputMU = '';
+    outputH = '';
+    outputVP = '';
+    outputSVP = '';
+  } else
+  if (tdb > 93 || tdb < -100) {
+    errorText = "Dry bulb temperature is outside range [-100...+93] °C or [-148...+199] °F";
+    errorSwitch = true;
+    textController5.text = '';
+    textController6.text = '';
+    outputHR = '';
+    outputV = '';
+    outputMU = '';
+    outputH = '';
+    outputVP = '';
+    outputSVP = '';
+  } else
+  if (fi == 0) {
+    errorText = "Relative humidity should not be 0";
+    errorSwitch = true;
+    textController5.text = '';
+    textController6.text = '';
+    outputHR = '';
+    outputV = '';
+    outputMU = '';
+    outputH = '';
+    outputVP = '';
+    outputSVP = '';
+  } else 
+  if (fi * 1 > 100 || fi * 1 <= 0) {
+    errorText = "Relative humidity is outside range [0...100]";
+    errorSwitch = true;
+    textController5.text = '';
+    textController6.text = '';
+    outputHR = '';
+    outputV = '';
+    outputMU = '';
+    outputH = '';
+    outputVP = '';
+    outputSVP = '';
+  } else 
   if (w * 1 <= 0 || pv * 1 <= 0) {
-    return {popUp: "Incorrect values", twb: '', tdp: ''};
+    errorText = "Incorrect values";
+    errorSwitch = true;
+    textController5.text = '';
+    textController6.text = '';
+  } else {
+    errorSwitch = false;
+    psiCalcGetOutput(w, vma, degSaturation, ima, pv, satVapPres);
+    // twb = twb;
+    // tdp = tdp;
   }
-  return {
-    popUp: psiCalcGetOutput(w, vma, degSaturation, ima, pv, satVapPres),
-    twb: twb,
-    tdp: tdp
-  };
 }
 
 psiCalcGetOutput(w, vma, degSaturation, ima, pv, satVapPres) {
-  // if (document.getElementsByName('group1')[0].checked) {
-  //  if (querySelectorAll('[name="group1"]')[0].checked) {
+
   if (initialIndex == 0) {
     // Si calculation
     outputHR = (w * 1000).toStringAsFixed(2);
