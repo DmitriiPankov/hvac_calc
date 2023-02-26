@@ -27,7 +27,7 @@ class PsychrometricCalculator extends StatefulWidget {
 
   @override
   State<PsychrometricCalculator> createState() => _PsychrometricCalculator();
-  }
+}
 
 class _PsychrometricCalculator extends State<PsychrometricCalculator> {
   final colorsTheme = Colors.black;
@@ -129,9 +129,7 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
             // SI - IP toggle switch
       
             ToggleSwitch(
-              labels: const ['SI', 'IP'],
-              // inactiveFgColor: const Color.fromARGB(255, 255, 0, 0),
-              
+              labels: const ['SI', 'IP'],        
               curve: Curves.easeIn,
               animate: true,
               animationDuration: 400,
@@ -148,97 +146,95 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
               inactiveBgColor: AppTheme.colors.field,
               radiusStyle: true,
               onToggle: (index) {
-                
-                  if (index == 1 && label1 == 0) {
-                    namePressure = 'Pressure, in Hg';
-                    nameAltitude = 'Altitude, ft';
-                    nameTdb = 'Tdb, °F';
-                    nameF = 'f, %';
-                    nameTwb = 'Twb, °F';
-                    nameTdp = 'Tdp, °F';
-                    label1 = 1;
-                    label2 = 0;
-                    initialIndex = 1;
 
-                    // from SI to IP
-                    
-                    if (textController1.text.isNotEmpty) {
-                    textController1.text =
-                        (double.parse(textController1.text) / 1000 * 0.2953)
-                            .toStringAsFixed(4);}
-                    if (textController2.text.isNotEmpty) {
-                    textController2.text =
-                        (double.parse(textController2.text) * 3.28)
-                            .toStringAsFixed(0);}
-                    if (textController3.text.isNotEmpty) {
-                    textController3.text =
-                        ((double.parse(textController3.text) * 9 / 5) + 32)
-                            .toStringAsFixed(1);}
-                    if (textController5.text.isNotEmpty) {
-                    textController5.text =
-                        (((double.parse(textController5.text)) * 9 / 5) + 32)
-                            .toStringAsFixed(1);}
-                    if (textController6.text.isNotEmpty) {
-                    textController6.text =
-                        (((double.parse(textController6.text)) * 9 / 5) + 32)
-                            .toStringAsFixed(1);}
-                    if (greenLabel == 1) {
-                      textControllerChanged4(textController4.text);
-                    } else
-                    if (greenLabel == 2) {
-                      textControllerChanged5(textController5.text);
-                    } else
-                    if (greenLabel == 3) {
-                      textControllerChanged6(textController6.text);
-                    }
-                    setState(() {initialIndex = 1;});
-      
-                    // from IP to SI
-                  } else if (index == 0 && label2 == 0) {
-                    namePressure = 'Pressure, Pa';
-                    nameAltitude = 'Altitude, m';
-                    nameTdb = 'Tdb, °C';
-                    nameF = 'f, %';
-                    nameTwb = 'Twb, °C';
-                    nameTdp = 'Tdp, °C';
-                    label2 = 1;
-                    label1 = 0;
-                    initialIndex = 0;
-                    
-      
-                    if (textController1.text.isNotEmpty) {
-                    textController1.text =
-                        (double.parse(textController1.text) * 1000 / 0.2953)
-                            .toStringAsFixed(0);}
-                    if (textController2.text.isNotEmpty) {
-                    textController2.text =
-                        (double.parse(textController2.text) / 3.28)
-                            .toStringAsFixed(0);}
-                    if (textController3.text.isNotEmpty) {
-                    textController3.text =
-                        ((double.parse(textController3.text) - 32) * 5 / 9)
-                            .toStringAsFixed(1);}
-                    if (textController5.text.isNotEmpty) {
-                    textController5.text =
-                        ((double.parse(textController5.text) - 32) * 5 / 9)
-                            .toStringAsFixed(1);}
-                    if (textController6.text.isNotEmpty) {
-                    textController6.text =
-                        ((double.parse(textController6.text) - 32) * 5 / 9)
-                            .toStringAsFixed(1);}
-                    if (greenLabel == 1) {
-                      textControllerChanged4(textController4.text);
-                    } else
-                    if (greenLabel == 2) {
-                      textControllerChanged5(textController5.text);
-                    } else
-                    if (greenLabel == 3) {
-                      textControllerChanged6(textController6.text);
-                    }
-                    setState(() {initialIndex = 0;});
-                  }
+                // from SI to IP
+
+                if (index == 1 && label1 == 0) {
+                  namePressure = 'Pressure, in Hg';
+                  nameAltitude = 'Altitude, ft';
+                  nameTdb = 'Tdb, °F';
+                  nameF = 'f, %';
+                  nameTwb = 'Twb, °F';
+                  nameTdp = 'Tdp, °F';
+                  label1 = 1;
+                  label2 = 0;
+                  initialIndex = 1;
                   
-                
+                  if (textController1.text.isNotEmpty) {
+                  textController1.text =
+                      (double.parse(textController1.text) / 1000 * 0.2953)
+                          .toStringAsFixed(4);}
+                  if (textController2.text.isNotEmpty) {
+                  textController2.text =
+                      (double.parse(textController2.text) * 3.28)
+                          .toStringAsFixed(0);}
+                  if (textController3.text.isNotEmpty) {
+                  textController3.text =
+                      ((double.parse(textController3.text) * 9 / 5) + 32)
+                          .toStringAsFixed(1);}
+                  if (textController5.text.isNotEmpty) {
+                  textController5.text =
+                      (((double.parse(textController5.text)) * 9 / 5) + 32)
+                          .toStringAsFixed(1);}
+                  if (textController6.text.isNotEmpty) {
+                  textController6.text =
+                      (((double.parse(textController6.text)) * 9 / 5) + 32)
+                          .toStringAsFixed(1);}
+                  if (greenLabel == 1) {
+                    textControllerChanged4(textController4.text);
+                  } else
+                  if (greenLabel == 2) {
+                    textControllerChanged5(textController5.text);
+                  } else
+                  if (greenLabel == 3) {
+                    textControllerChanged6(textController6.text);
+                  }
+                  setState(() {initialIndex = 1;});
+    
+                  // from IP to SI
+                  
+                } else if (index == 0 && label2 == 0) {
+                  namePressure = 'Pressure, Pa';
+                  nameAltitude = 'Altitude, m';
+                  nameTdb = 'Tdb, °C';
+                  nameF = 'f, %';
+                  nameTwb = 'Twb, °C';
+                  nameTdp = 'Tdp, °C';
+                  label2 = 1;
+                  label1 = 0;
+                  initialIndex = 0;
+    
+                  if (textController1.text.isNotEmpty) {
+                  textController1.text =
+                      (double.parse(textController1.text) * 1000 / 0.2953)
+                          .toStringAsFixed(0);}
+                  if (textController2.text.isNotEmpty) {
+                  textController2.text =
+                      (double.parse(textController2.text) / 3.28)
+                          .toStringAsFixed(0);}
+                  if (textController3.text.isNotEmpty) {
+                  textController3.text =
+                      ((double.parse(textController3.text) - 32) * 5 / 9)
+                          .toStringAsFixed(1);}
+                  if (textController5.text.isNotEmpty) {
+                  textController5.text =
+                      ((double.parse(textController5.text) - 32) * 5 / 9)
+                          .toStringAsFixed(1);}
+                  if (textController6.text.isNotEmpty) {
+                  textController6.text =
+                      ((double.parse(textController6.text) - 32) * 5 / 9)
+                          .toStringAsFixed(1);}
+                  if (greenLabel == 1) {
+                    textControllerChanged4(textController4.text);
+                  } else
+                  if (greenLabel == 2) {
+                    textControllerChanged5(textController5.text);
+                  } else
+                  if (greenLabel == 3) {
+                    textControllerChanged6(textController6.text);
+                  }
+                  setState(() {initialIndex = 0;});
+                }
               },
             ),
       
@@ -254,7 +250,7 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   
-                  // Pressure
+                  // Pressure Text Form Field
                   
                   Flexible(
                     child: Column(
@@ -269,6 +265,7 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                           onChanged: (value) {
                             setState(() {});
                             textControllerChanged1(value);
+                            textController1.selection = TextSelection.collapsed(offset: textController1.text.length);
                           },
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
@@ -292,7 +289,7 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                     width: 12.0,
                   ),
                   
-                  //Altitude
+                  // Altitude Text Form Field
                   
                   Flexible(
                     child: Column(
@@ -307,6 +304,7 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                           onChanged: (value) {
                             setState(() {});
                             textControllerChanged2(value);
+                            textController2.selection = TextSelection.collapsed(offset: textController2.text.length);
                           },
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
@@ -333,14 +331,14 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
               height: 20.0,
             ),
       
-            // Tdb
+            // Tdb Text Form Field
       
             Padding(
               padding: const EdgeInsets.only(left: 20.0, right: 20),
               child: Column(
                 children: [
                   Tooltip(
-                    verticalOffset: 11,
+                    verticalOffset: -26,
                     message: 'Dry bulb temperature',
                     triggerMode: TooltipTriggerMode.tap,
                     child: Text(
@@ -349,13 +347,14 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                     ),
                   ),
                   SizedBox(
-                    width: 160,
+                    width: MediaQuery.of(context).size.width * 0.4,
                     child: TextFormField(
                       style: Theme.of(context).textTheme.headlineMedium,
                       controller: textController3,
                       onChanged: (value) {
                               setState(() {});
                               textControllerChanged3(value);
+                              textController3.selection = TextSelection.collapsed(offset: textController3.text.length);
                             },
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
@@ -388,13 +387,13 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
       
-                  // f
+                  // f Text Form Field
       
                   Flexible(
                     child: Column(
                       children: [
                         Tooltip(
-                          verticalOffset: 11,
+                          verticalOffset: -26,
                           message: 'Relative humidity',
                           triggerMode: TooltipTriggerMode.tap,
                           child: Text(
@@ -409,6 +408,7 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                             setState(() {
                               greenLabel = 1;
                               textControllerChanged4(value);
+                              textController4.selection = TextSelection.collapsed(offset: textController4.text.length);
                             });
                           },
                           keyboardType: TextInputType.number,
@@ -444,13 +444,13 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                     width: 12.0,
                   ),
       
-                  // Twb
+                  // Twb Text Form Field
       
                   Flexible(
                     child: Column(
                       children: [
                         Tooltip(
-                          verticalOffset: 11,
+                          verticalOffset: -26,
                           message: 'Wet bulb temperature',
                           triggerMode: TooltipTriggerMode.tap,
                           child: Text(
@@ -465,6 +465,7 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                             setState(() {
                               greenLabel = 2;
                               textControllerChanged5(value);
+                              textController5.selection = TextSelection.collapsed(offset: textController5.text.length);
                             });
                           },
                           keyboardType: TextInputType.number,
@@ -499,13 +500,13 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                     width: 12.0,
                   ),
       
-                  // Tdp
+                  // Tdp Text Form Field
       
                   Flexible(
                     child: Column(
                       children: [
                         Tooltip(
-                          verticalOffset: 11,
+                          verticalOffset: -26,
                           message: 'Dew point temperature',
                           triggerMode: TooltipTriggerMode.tap,
                           child: Text(
@@ -520,6 +521,7 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                             setState(() {
                               greenLabel = 3;
                               textControllerChanged6(value);
+                              textController6.selection = TextSelection.collapsed(offset: textController6.text.length);
                             });
                           },
                           keyboardType: TextInputType.number,
@@ -566,9 +568,12 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
             ),
-      
+
             Builder(
               builder: (context) {
+
+                // Error Box
+
                 if (errorSwitch) {
                 return Padding(
                   padding: const EdgeInsets.only(left: 20.0, right: 20),
@@ -588,6 +593,8 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                 );
                 } else { return 
       
+                  // Results
+
                   Column(
                     children: [
       
@@ -612,7 +619,7 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                                     child: Tooltip(
                                       verticalOffset: 11,
                                       message:
-                                        'Humidity ratio, g of moisture per kg of dry air',
+                                        'Humidity ratio',
                                       triggerMode: TooltipTriggerMode.tap,
                                       child: Text(
                                         'HR',

@@ -1,9 +1,18 @@
 import 'package:hvac_calc/psychrometric.dart';
 import 'package:hvac_calc/screens/psychrometric_calculator.dart';
 
+class Replacing {
+  // from comma to dot
+  String commaToDot (value) {
+    String f = value.replaceAll(',','.');
+    return f;
+  }
+}
+
 textControllerChanged1 (value) {
-  // checking double type
+  // checking double type and replacing commas
   try {
+    value = Replacing().commaToDot(value);
     resultDouble = double.parse(value);
     checkingDouble = true;
   } catch (e) {
@@ -17,6 +26,7 @@ textControllerChanged1 (value) {
     } else
     // SI - IP checking
     if (initialIndex == 0) {
+      textController1.text = value;
       textController2.text = heightFromPressure(double.parse(value)).toStringAsFixed(0);
       if (greenLabel == 1 && textController4.text.isNotEmpty) {
         textControllerChanged4(textController4.text);
@@ -28,6 +38,7 @@ textControllerChanged1 (value) {
           textControllerChanged6(textController6.text);
       }
     } else if (initialIndex == 1) {
+      textController1.text = value;
       textController2.text = (heightFromPressure(double.parse(value) * 1000 / 0.2953) * 3.28).toStringAsFixed(0);
       if (greenLabel == 1 && textController4.text.isNotEmpty) {
         textControllerChanged4(textController4.text);
@@ -52,8 +63,9 @@ textControllerChanged1 (value) {
 }
 
 textControllerChanged2 (value) {
-  // checking double type
+  // checking double type and replacing commas
   try {
+    value = Replacing().commaToDot(value);
     resultDouble = double.parse(value);
     checkingDouble = true;
   } catch (e) {
@@ -67,6 +79,7 @@ textControllerChanged2 (value) {
     } else
     // SI - IP checking
     if (initialIndex == 0) {
+      textController2.text = value;
       textController1.text = pressureFromHeight(double.parse(value)).toStringAsFixed(0);
       if (greenLabel == 1 && textController4.text.isNotEmpty) {
         textControllerChanged4(textController4.text);
@@ -78,6 +91,7 @@ textControllerChanged2 (value) {
           textControllerChanged6(textController6.text);
       }
     } else if (initialIndex == 1) {
+      textController2.text = value;
       textController1.text = (pressureFromHeight(double.parse(value) / 3.28) / 1000 * 0.2953).toStringAsFixed(4);
       if (greenLabel == 1 && textController4.text.isNotEmpty) {
         textControllerChanged4(textController4.text);
@@ -102,8 +116,9 @@ textControllerChanged2 (value) {
 }
 
 textControllerChanged3 (value) {
-// checking double type
+// checking double type and replacing commas
   try {
+    value = Replacing().commaToDot(value);
     resultDouble = double.parse(value);
     checkingDouble = true;
   } catch (e) {
@@ -117,6 +132,7 @@ textControllerChanged3 (value) {
     } else
     // SI - IP checking
     if (initialIndex == 0) {
+      textController3.text = value;
       if (greenLabel == 1 && textController4.text.isNotEmpty) {
         textControllerChanged4(textController4.text);
       } else
@@ -127,6 +143,7 @@ textControllerChanged3 (value) {
         textControllerChanged6(textController6.text);
       }
     } else if (initialIndex == 1) {
+      textController3.text = value;
       if (greenLabel == 1 && textController4.text.isNotEmpty) {
         textControllerChanged4(textController4.text);
       } else
@@ -149,8 +166,9 @@ textControllerChanged3 (value) {
 }
 
 textControllerChanged4 (value) {
-  // checking double type
+  // checking double type and replacing commas
   try {
+    value = Replacing().commaToDot(value);
     resultDouble = double.parse(value);
     checkingDouble = true;
   } catch (e) {
@@ -164,6 +182,7 @@ textControllerChanged4 (value) {
     } else
     // SI - IP checking
     if (initialIndex == 0) {
+      textController4.text = value;
       textController5.text = getTWetBulbFromRelHum(
         fi: double.parse(value) / 100,
         tdb: double.parse(textController3.text),
@@ -181,7 +200,7 @@ textControllerChanged4 (value) {
         p: double.parse(textController1.text),
       );
     } else if (initialIndex == 1) {
-
+      textController4.text = value;
       textController5.text = ((getTWetBulbFromRelHum(
         fi: double.parse(value) / 100,
         tdb: ((double.parse(textController3.text) - 32) * 5 / 9),
@@ -213,8 +232,9 @@ textControllerChanged4 (value) {
 }
 
 textControllerChanged5 (value) {
-  // checking double type
+  // checking double type and replacing commas
   try {
+    value = Replacing().commaToDot(value);
     resultDouble = double.parse(value);
     checkingDouble = true;
   } catch (e) {
@@ -228,6 +248,7 @@ textControllerChanged5 (value) {
     } else
     // SI - IP checking
     if (initialIndex == 0) {
+      textController5.text = value;
       textController6.text = getTDewPointFromTWetBulb(
         twb: double.parse(value),
         tdb: double.parse(textController3.text),
@@ -246,6 +267,7 @@ textControllerChanged5 (value) {
         p: double.parse(textController1.text),
       );
     } else if (initialIndex == 1) {
+      textController5.text = value;
       textController6.text = ((getTDewPointFromTWetBulb(
         twb: ((double.parse(value) - 32) * 5 / 9),
         tdb: ((double.parse(textController3.text) - 32) * 5 / 9),
@@ -278,8 +300,9 @@ textControllerChanged5 (value) {
 }
 
 textControllerChanged6 (value) {
-  // checking double type
+  // checking double type and replacing commas
   try {
+    value = Replacing().commaToDot(value);
     resultDouble = double.parse(value);
     checkingDouble = true;
   } catch (e) {
@@ -293,6 +316,7 @@ textControllerChanged6 (value) {
     } else
       // SI - IP checking
     if (initialIndex == 0) {
+      textController6.text = value;
       textController5.text = getTWetBulbFromTDewPoint(
         tdp: double.parse(value),
         tdb: double.parse(textController3.text),
@@ -310,6 +334,7 @@ textControllerChanged6 (value) {
         p: double.parse(textController1.text),
       );
     } else if (initialIndex == 1) {
+      textController6.text = value;
       textController5.text = ((getTWetBulbFromTDewPoint(
         tdp: ((double.parse(value) - 32) * 5 / 9),
         tdb: ((double.parse(textController3.text) - 32) * 5 / 9),
