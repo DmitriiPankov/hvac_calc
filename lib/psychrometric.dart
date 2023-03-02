@@ -36,12 +36,14 @@ String errorText = '1111';
 bool errorSwitch = false;
 
 pressureFromHeight(h) {
-  var p = 101325 * pow(e, -h / 8435.2);
+  // var p = 101325 * pow(e, -h / 8435.2);    // Old calculation
+  var p = 101325 * pow((1 - (2.25577 * pow(10, -5) * h)), 5.2559);
   return p;
 }
 
 heightFromPressure(p) {
-  var h = (-8435.2 * log(p / 101325));
+  // var h = (-8435.2 * log(p / 101325));     // Old calculation
+  var h = (1 - pow((p / 101325), (1 / 5.2559))) / (2.25577 * pow(10, -5));
   return h;
 }
 

@@ -93,8 +93,8 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
           // Status bar color
           statusBarColor: Color.fromARGB(255, 255, 255, 255), 
           // Status bar brightness (optional)
-          statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
-          statusBarBrightness: Brightness.light, // For iOS (dark icons)
+          statusBarIconBrightness: Brightness.dark,   // For Android (dark icons)
+          statusBarBrightness: Brightness.light,      // For iOS (dark icons)
         ),
         shadowColor: Colors.transparent,
         leading: IconButton(
@@ -122,6 +122,7 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
           mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
+
             const SizedBox(
               height: 5.0,
             ),
@@ -142,7 +143,6 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                 AppTheme.colors.toggle,
                 const Color.fromARGB(150, 64, 179, 255),
               ],
-              
               inactiveBgColor: AppTheme.colors.field,
               radiusStyle: true,
               onToggle: (index) {
@@ -618,12 +618,15 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                                     ),
                                     child: Tooltip(
                                       verticalOffset: 11,
-                                      message:
-                                        'Humidity ratio',
+                                      message: 'Humidity ratio',
                                       triggerMode: TooltipTriggerMode.tap,
-                                      child: Text(
-                                        'HR',
-                                        style: Theme.of(context).textTheme.headlineLarge,
+                                      child: Container(
+                                        width: MediaQuery.of(context).size.width * 0.15,
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          'HR',
+                                          style: Theme.of(context).textTheme.headlineLarge,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -702,9 +705,13 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                                       verticalOffset: 11,
                                       message: 'Specific volume',
                                       triggerMode: TooltipTriggerMode.tap,
-                                      child: Text(
-                                        'v',
-                                        style: Theme.of(context).textTheme.headlineLarge,
+                                      child: Container(
+                                        width: MediaQuery.of(context).size.width * 0.15,
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          'v',
+                                          style: Theme.of(context).textTheme.headlineLarge,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -779,9 +786,13 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                                       verticalOffset: 11,
                                       message: 'Degree of saturation',
                                       triggerMode: TooltipTriggerMode.tap,
-                                      child: Text(
-                                        'MU',
-                                        style: Theme.of(context).textTheme.headlineLarge,
+                                      child: Container(
+                                        width: MediaQuery.of(context).size.width * 0.15,
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          'MU',
+                                          style: Theme.of(context).textTheme.headlineLarge,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -856,9 +867,13 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                                       verticalOffset: 11,
                                       message: 'Enthalpy',
                                       triggerMode: TooltipTriggerMode.tap,
-                                      child: Text(
-                                        'h',
-                                        style: Theme.of(context).textTheme.headlineLarge,
+                                      child: Container(
+                                        width: MediaQuery.of(context).size.width * 0.15,
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          'h',
+                                          style: Theme.of(context).textTheme.headlineLarge,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -933,9 +948,13 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                                       verticalOffset: 11,
                                       message: 'Vapour pressure',
                                       triggerMode: TooltipTriggerMode.tap,
-                                      child: Text(
-                                        'VP',
-                                        style: Theme.of(context).textTheme.headlineLarge,
+                                      child: Container(
+                                        width: MediaQuery.of(context).size.width * 0.15,
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          'VP',
+                                          style: Theme.of(context).textTheme.headlineLarge,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -1012,9 +1031,13 @@ class _PsychrometricCalculator extends State<PsychrometricCalculator> {
                                       verticalOffset: 11,
                                       message: 'Saturation vapour pressure',
                                       triggerMode: TooltipTriggerMode.tap,
-                                      child: Text(
-                                        'SVP',
-                                        style: Theme.of(context).textTheme.headlineLarge,
+                                      child: Container(
+                                        width: MediaQuery.of(context).size.width * 0.15,
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          'SVP',
+                                          style: Theme.of(context).textTheme.headlineLarge,
+                                        ),
                                       ),
                                     ),
                                   ),
