@@ -38,7 +38,6 @@ var labelAbout2 = 1;
           color: AppTheme.colors.results,
           child: EasyRichText(
             text,
-            
             defaultStyle: TextStyle(color: AppTheme.colors.font1),
             patternList: [
               EasyRichTextPattern(
@@ -83,14 +82,6 @@ var labelAbout2 = 1;
                 targetString: 'ws',
                 style: TextStyle(color: AppTheme.colors.font1),
               ),
-              // EasyRichTextPattern(
-              //   matchOption: 'last',
-              //   stringBeforeTarget: 'P',
-              //   matchWordBoundaries: false,
-              //   subScript: true,
-              //   targetString: 'a',
-              //   style: TextStyle(color: AppTheme.colors.font1),
-              // ),
               EasyRichTextPattern(
                 stringBeforeTarget: 'P',
                 matchWordBoundaries: false,
@@ -146,6 +137,31 @@ var labelAbout2 = 1;
       padding: const EdgeInsets.only(bottom: 10),
       alignment: Alignment.centerLeft,
       child: Text(text, style: const TextStyle(fontSize: 13),),
+    );
+  }
+
+  Widget mySimpleLeftTextSub (String text) {
+    return Container(
+      padding: const EdgeInsets.only(bottom: 10),
+      alignment: Alignment.centerLeft,
+      child: EasyRichText(
+        defaultStyle: const TextStyle(fontSize: 13),
+        text,
+        patternList: [
+          EasyRichTextPattern(
+            stringBeforeTarget: 'm',
+            matchWordBoundaries: false,
+            superScript: true,
+            targetString: '3',
+          ),
+          EasyRichTextPattern(
+            stringBeforeTarget: 'ft',
+            matchWordBoundaries: false,
+            superScript: true,
+            targetString: '3',
+          ),
+        ]
+      ),
     );
   }
 
@@ -218,6 +234,21 @@ var labelAbout2 = 1;
           ),
         ],
       ),
+    );
+  }
+
+  // Widget for formulas without number Number
+  Widget myFormulaWithoutNum (String formula, String numb) {
+    return Container(
+      padding: const EdgeInsets.only(bottom: 8),
+      alignment: Alignment.center,
+      child: 
+        FittedBox(
+          child: Math.tex(
+                formula,
+                textStyle: const TextStyle(fontSize: 14),
+          ),
+        ),
     );
   }
 
@@ -432,7 +463,6 @@ class _InformationState extends State<AboutTheCalculation> {
                   }
                 }
               ),
-
             ],
           ),
         ),
