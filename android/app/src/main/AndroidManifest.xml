@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.hvac_calc">
+    package="ws.tilda.dmitriipankov.hvaccalc">
    <application
         android:label="HVAC calc"
         android:name="${applicationName}"

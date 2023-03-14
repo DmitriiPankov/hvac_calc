@@ -1,6 +1,5 @@
 {
-    "editor.rulers": [
-   
-    ],
+    "editor.rulers": [],
     "dart.lineLength": 80,
+    "cmake.sourceDirectory": "${workspaceFolder}/linux",
 }
